@@ -52,6 +52,7 @@ export const api = {
     return response.json();
   },
 
+
   // Quiz endpoints
   async generateQuiz(text: string, numQuestions: number = 5) {
     const response = await fetch(`${API_BASE_URL}/quiz/generate`, {

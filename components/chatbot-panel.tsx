@@ -36,12 +36,6 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
   const [isTyping, setIsTyping] = useState(false)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-  const suggestedQuestions = [
-    "What is the difference between prokaryotic and eukaryotic cells?",
-    "Explain the process of photosynthesis",
-    "What are the key principles of evolution?",
-    "How does homeostasis work in living organisms?",
-  ]
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -49,32 +43,7 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
     }
   }, [messages])
 
-  const simulateAIResponse = (question: string): string => {
-    const responses: { [key: string]: string } = {
-      prokaryotic:
-        "Great question! Prokaryotic and eukaryotic cells are the two main types of cells:\n\n**Prokaryotic cells:**\n- No membrane-bound nucleus\n- Genetic material freely floating in cytoplasm\n- Examples: bacteria and archaea\n- Generally smaller and simpler\n\n**Eukaryotic cells:**\n- Have a membrane-bound nucleus\n- Genetic material contained within nucleus\n- Examples: plant, animal, and fungal cells\n- Contain various organelles like mitochondria, ER, etc.",
-
-      photosynthesis:
-        "Photosynthesis is the process by which plants convert light energy into chemical energy. Here's how it works:\n\n**Overall equation:** 6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂\n\n**Two main stages:**\n1. **Light reactions** (in thylakoids): Capture light energy and produce ATP and NADPH\n2. **Calvin cycle** (in stroma): Use ATP and NADPH to convert CO₂ into glucose\n\n**Importance:** Forms the base of most food chains and produces the oxygen we breathe!",
-
-      evolution:
-        "Evolution is the change in heritable traits of biological populations over successive generations. Key principles include:\n\n**Natural Selection:**\n- Organisms with favorable traits survive and reproduce more\n- These traits become more common over time\n\n**Key mechanisms:**\n- Mutation: Creates genetic variation\n- Gene flow: Movement of genes between populations\n- Genetic drift: Random changes in gene frequencies\n- Selection: Differential survival and reproduction\n\n**Evidence:** Fossil record, comparative anatomy, molecular biology, and direct observation.",
-
-      homeostasis:
-        "Homeostasis is the maintenance of stable internal conditions despite external changes. Here's how it works:\n\n**Key components:**\n- **Sensor:** Detects changes in the environment\n- **Control center:** Processes information and determines response\n- **Effector:** Carries out the response\n\n**Examples:**\n- Body temperature regulation (sweating, shivering)\n- Blood glucose control (insulin, glucagon)\n- pH balance in blood\n- Water balance in cells\n\n**Feedback loops:** Usually negative feedback to maintain stability, occasionally positive feedback for specific processes.",
-    }
-
-    // Find the most relevant response based on keywords
-    const lowerQuestion = question.toLowerCase()
-    for (const [key, response] of Object.entries(responses)) {
-      if (lowerQuestion.includes(key)) {
-        return response
-      }
-    }
-
-    // Default response
-    return `Based on the content in "${fileName}", I can help explain that concept. The document covers various biological topics including cell structure, evolution, and metabolic processes. Could you be more specific about what aspect you'd like me to explain? I can break down complex concepts into simpler terms and provide examples to help with your understanding.`
-  }
+  
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return
@@ -113,9 +82,6 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
     }
   }
 
-  const handleSuggestedQuestion = (question: string) => {
-    setInputValue(question)
-  }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -209,28 +175,6 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
             </div>
           </ScrollArea>
 
-          {/* Suggested Questions */}
-          {messages.length === 1 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Lightbulb className="h-4 w-4" />
-                Suggested questions:
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {suggestedQuestions.map((question, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleSuggestedQuestion(question)}
-                    className="text-xs h-auto py-2 px-3 whitespace-normal text-left"
-                  >
-                    {question}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Input */}
           <div className="flex gap-2">

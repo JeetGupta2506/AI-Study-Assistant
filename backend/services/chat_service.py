@@ -16,3 +16,4 @@ class ChatService:
         
         response = await self.gemini.analyze_with_context(message, context)
         return response
+

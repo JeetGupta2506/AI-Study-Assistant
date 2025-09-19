@@ -15,7 +15,7 @@ interface Question {
   id: string
   question: string
   options: string[]
-  correctAnswer: number
+  correct_answer: number
   explanation: string
 }
 
@@ -65,12 +65,22 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
   const nextQuestion = () => {
     if (currentQuestionIndex < (quiz?.length || 0) - 1) {
       setCurrentQuestionIndex((prev) => prev + 1)
+      // Force radio group to reset selection
+      const radioGroup = document.querySelector('input[type="radio"]:checked') as HTMLInputElement;
+      if (radioGroup) {
+        radioGroup.checked = false;
+      }
     }
   }
 
   const previousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1)
+      // Force radio group to reset selection
+      const radioGroup = document.querySelector('input[type="radio"]:checked') as HTMLInputElement;
+      if (radioGroup) {
+        radioGroup.checked = false;
+      }
     }
   }
 
@@ -90,7 +100,7 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
     if (!quiz) return 0
     let correct = 0
     quiz.forEach((question, index) => {
-      if (selectedAnswers[index] === question.correctAnswer) {
+      if (selectedAnswers[index] === question.correct_answer) {
         correct++
       }
     })
@@ -106,7 +116,7 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
       question.options.forEach((option, optIndex) => {
         content += `   ${String.fromCharCode(97 + optIndex)}) ${option}\n`
       })
-      content += `   Correct Answer: ${String.fromCharCode(97 + question.correctAnswer)}) ${question.options[question.correctAnswer]}\n`
+      content += `   Correct Answer: ${String.fromCharCode(97 + question.correct_answer)}) ${question.options[question.correct_answer]}\n`
       content += `   Explanation: ${question.explanation}\n\n`
     })
 
@@ -191,7 +201,8 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
                 <h3 className="text-lg font-semibold leading-relaxed">{currentQuestion.question}</h3>
 
                 <RadioGroup
-                  value={selectedAnswers[currentQuestionIndex]?.toString()}
+                  key={`question-${currentQuestionIndex}`} // Force re-render on question change
+                  value={showResults ? selectedAnswers[currentQuestionIndex]?.toString() : undefined}
                   onValueChange={(value) => handleAnswerSelect(currentQuestionIndex, Number.parseInt(value))}
                 >
                   {currentQuestion.options.map((option, index) => (
@@ -261,7 +272,7 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
               <h3 className="font-semibold">Detailed Results:</h3>
               {quiz.map((question, index) => {
                 const userAnswer = selectedAnswers[index]
-                const isCorrect = userAnswer === question.correctAnswer
+                const isCorrect = userAnswer === question.correct_answer
 
                 return (
                   <Card
@@ -288,7 +299,7 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
                               {!isCorrect && (
                                 <p>
                                   <span className="text-muted-foreground">Correct answer:</span>{" "}
-                                  <span className="text-green-600">{question.options[question.correctAnswer]}</span>
+                                  <span className="text-green-600">{question.options[question.correct_answer]}</span>
                                 </p>
                               )}
                             </div>

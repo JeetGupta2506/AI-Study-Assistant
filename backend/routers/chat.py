@@ -12,3 +12,4 @@ async def send_message(message: ChatMessage):
         return ChatResponse(content=response)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
