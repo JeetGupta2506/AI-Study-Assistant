@@ -135,43 +135,41 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center gap-2 justify-center">
             <MessageCircle className="h-5 w-5" />
             Interactive Q&A Chatbot
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-center">
             Ask questions about your study material and get instant AI-powered answers with explanations.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between gap-2 mb-4">
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="flex items-center gap-1">
-                <Bot className="h-3 w-3" />
-                AI Assistant Active
-              </Badge>
-              <span className="text-sm text-muted-foreground">Analyzing: {fileName}</span>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Switch
-                id="chat-streaming"
-                checked={useStreaming}
-                onCheckedChange={setUseStreaming}
-              />
-              <Label htmlFor="chat-streaming" className="flex items-center gap-1 text-xs">
-                <Zap className="h-3 w-3" />
-                Streaming
-              </Label>
-            </div>
+          <div className="flex items-center gap-2 mb-4 justify-center">
+            <Badge variant="secondary" className="flex items-center gap-1">
+              <Bot className="h-3 w-3" />
+              AI Assistant Active
+            </Badge>
+            <span className="text-sm text-muted-foreground">Analyzing: {fileName}</span>
+          </div>
+          
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Switch
+              id="chat-streaming"
+              checked={useStreaming}
+              onCheckedChange={setUseStreaming}
+            />
+            <Label htmlFor="chat-streaming" className="flex items-center gap-1 text-xs">
+              <Zap className="h-3 w-3" />
+              Streaming
+            </Label>
           </div>
         </CardContent>
       </Card>
 
       <Card className="h-[600px] flex flex-col">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Chat with your document</CardTitle>
+          {/* Removed the "Chat with your document" title */}
         </CardHeader>
 
         <CardContent className="flex-1 flex flex-col gap-4">
