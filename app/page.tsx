@@ -9,7 +9,7 @@ import { FileUpload } from "@/components/file-upload"
 import { SummarizationPanel } from "@/components/summarization-panel"
 import { ChatbotPanel } from "@/components/chatbot-panel"
 import { QuizPanel } from "@/components/quiz-panel"
-import { ThemeToggle } from "@/components/theme-toggle"
+// Theme toggle removed from header per user's request
 
 export default function HomePage() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
@@ -33,10 +33,7 @@ export default function HomePage() {
               <h1 className="text-2xl font-bold text-balance logo">AI Study Assistant</h1>
             </div>
             <div className="flex items-center gap-4">
-              <p className="text-sm text-muted-foreground hidden md:block">
-                Upload, Summarize, Chat, and Quiz with your study materials
-              </p>
-              <ThemeToggle />
+              {/* header controls removed */}
             </div>
           </div>
         </div>
