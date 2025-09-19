@@ -7,8 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { MessageCircle, Send, Bot, User, Lightbulb } from "lucide-react"
+import { MessageCircle, Send, Bot, User, Lightbulb, Zap } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import { api } from "@/lib/api"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -36,6 +38,7 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
   ])
   const [inputValue, setInputValue] = useState("")
   const [isTyping, setIsTyping] = useState(false)
+  const [useStreaming, setUseStreaming] = useState(true)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
 
@@ -58,29 +61,66 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
     }
 
     setMessages((prev) => [...prev, userMessage])
+    const currentInput = inputValue;
     setInputValue("")
     setIsTyping(true)
 
+    // Create a temporary message for the assistant response
+    const assistantMessageId = (Date.now() + 1).toString();
+    const assistantMessage: Message = {
+      id: assistantMessageId,
+      role: "assistant",
+      content: "",
+      timestamp: new Date(),
+    }
+    setMessages((prev) => [...prev, assistantMessage])
+
     try {
-      const response = await api.sendChatMessage(inputValue, text)
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: response.content,
-        timestamp: new Date(),
+      if (useStreaming) {
+        await api.sendChatMessageStream(
+          currentInput, 
+          text,
+          // On chunk received
+          (chunk: string) => {
+            setMessages((prev) => prev.map(msg => 
+              msg.id === assistantMessageId 
+                ? { ...msg, content: msg.content + chunk }
+                : msg
+            ))
+          },
+          // On completion
+          () => {
+            setIsTyping(false)
+          },
+          // On error
+          (error: string) => {
+            setMessages((prev) => prev.map(msg => 
+              msg.id === assistantMessageId 
+                ? { ...msg, content: "I apologize, but I encountered an error while processing your request. Please try again." }
+                : msg
+            ))
+            setIsTyping(false)
+            console.error('Error in chat:', error)
+          }
+        )
+      } else {
+        // Use regular non-streaming API
+        const response = await api.sendChatMessage(currentInput, text)
+        setMessages((prev) => prev.map(msg => 
+          msg.id === assistantMessageId 
+            ? { ...msg, content: response.content }
+            : msg
+        ))
+        setIsTyping(false)
       }
-      setMessages((prev) => [...prev, aiResponse])
     } catch (error) {
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: "I apologize, but I encountered an error while processing your request. Please try again.",
-        timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, errorMessage])
-      console.error('Error in chat:', error)
-    } finally {
+      setMessages((prev) => prev.map(msg => 
+        msg.id === assistantMessageId 
+          ? { ...msg, content: "I apologize, but I encountered an error while processing your request. Please try again." }
+          : msg
+      ))
       setIsTyping(false)
+      console.error('Error in chat:', error)
     }
   }
 
@@ -105,12 +145,26 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2 mb-4">
-            <Badge variant="secondary" className="flex items-center gap-1">
-              <Bot className="h-3 w-3" />
-              AI Assistant Active
-            </Badge>
-            <span className="text-sm text-muted-foreground">Analyzing: {fileName}</span>
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="flex items-center gap-1">
+                <Bot className="h-3 w-3" />
+                AI Assistant Active
+              </Badge>
+              <span className="text-sm text-muted-foreground">Analyzing: {fileName}</span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Switch
+                id="chat-streaming"
+                checked={useStreaming}
+                onCheckedChange={setUseStreaming}
+              />
+              <Label htmlFor="chat-streaming" className="flex items-center gap-1 text-xs">
+                <Zap className="h-3 w-3" />
+                Streaming
+              </Label>
+            </div>
           </div>
         </CardContent>
       </Card>

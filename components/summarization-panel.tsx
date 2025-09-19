@@ -86,6 +86,21 @@ export function SummarizationPanel({ text, fileName }: SummarizationPanelProps) 
               )}
             </Button>
           )}
+
+          {error && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-700 text-sm">{error}</p>
+              <Button 
+                onClick={generateSummary} 
+                variant="outline" 
+                size="sm" 
+                className="mt-2"
+                disabled={isGenerating}
+              >
+                Try Again
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
