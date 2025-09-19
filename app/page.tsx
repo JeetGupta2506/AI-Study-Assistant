@@ -63,15 +63,15 @@ export default function HomePage() {
 
           <TabsContent value="upload" className="space-y-6">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Upload className="h-5 w-5" />
-                  Upload Study Material
-                </CardTitle>
-                <CardDescription>
-                  Upload a PDF of your textbook, notes, or syllabus to get started with AI-powered study assistance.
-                </CardDescription>
-              </CardHeader>
+              <CardHeader className="items-center text-center">
+                  <CardTitle className="flex items-center gap-2 justify-center">
+                    <Upload className="h-5 w-5" />
+                    Upload Study Material
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    Upload a PDF of your textbook, notes, or syllabus to get started with AI-powered study assistance.
+                  </CardDescription>
+                </CardHeader>
               <CardContent>
                 <FileUpload onFileUpload={handleFileUpload} />
               </CardContent>
@@ -79,18 +79,20 @@ export default function HomePage() {
 
             {uploadedFile && (
               <Card>
-                <CardHeader>
-                  <CardTitle>File Uploaded Successfully</CardTitle>
+                <CardHeader className="items-center text-center">
+                  <CardTitle className="text-center">File Uploaded Successfully</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <FileText className="h-4 w-4" />
-                    <span>{uploadedFile.name}</span>
-                    <span>({Math.round(uploadedFile.size / 1024)} KB)</span>
-                  </div>
-                  <Button onClick={() => setActiveTab("summarize")} className="mt-4">
-                    Start Analyzing
-                  </Button>
+                    <div className="flex flex-col items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        <span>{uploadedFile.name}</span>
+                        <span>({Math.round(uploadedFile.size / 1024)} KB)</span>
+                      </div>
+                      <Button onClick={() => setActiveTab("summarize")} className="mt-4 bg-sky-500 text-white hover:bg-sky-600">
+                        Start Analyzing
+                      </Button>
+                    </div>
                 </CardContent>
               </Card>
             )}

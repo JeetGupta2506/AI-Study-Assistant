@@ -54,47 +54,36 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     disabled: isProcessing,
   })
 
+  // Minimal upload UI: only show choose button and format instruction (no inner card)
   return (
     <div className="space-y-4">
-      <Card
-        {...getRootProps()}
-        className={`border-2 border-dashed cursor-pointer transition-colors ${
-          isDragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50"
-        } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
-      >
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <input {...getInputProps()} />
+      <div className={`${isProcessing ? "opacity-50 cursor-not-allowed" : ""} px-6 py-8`}>
+        <input
+          {...getInputProps()}
+          className="hidden"
+          aria-hidden
+        />
 
-          {isProcessing ? (
-            <div className="flex flex-col items-center gap-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              <p className="text-sm text-muted-foreground">Processing PDF...</p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="rounded-full bg-primary/10 p-4">
-                <Upload className="h-8 w-8 text-primary" />
-              </div>
+        {isProcessing ? (
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p className="text-sm text-muted-foreground">Processing PDF...</p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-2 text-center">
+            <Button className="mt-2 bg-sky-500 text-white hover:bg-sky-600" onClick={() => {
+              // Trigger the hidden file input click
+              const input = document.querySelector<HTMLInputElement>('input[type="file"]')
+              input?.click()
+            }}>
+              <FileText className="h-4 w-4 mr-2" />
+              Choose PDF File
+            </Button>
 
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">
-                  {isDragActive ? "Drop your PDF here" : "Upload your study material"}
-                </h3>
-                <p className="text-sm text-muted-foreground max-w-sm">
-                  Drag and drop a PDF file here, or click to browse and select a file from your device.
-                </p>
-              </div>
-
-              <Button variant="outline" className="mt-2 bg-transparent">
-                <FileText className="h-4 w-4 mr-2" />
-                Choose PDF File
-              </Button>
-
-              <p className="text-xs text-muted-foreground">Supported format: PDF (max 10MB)</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            <p className="text-xs text-muted-foreground">Supported format: PDF (max 10MB)</p>
+          </div>
+        )}
+      </div>
 
       {error && (
         <Alert variant="destructive">

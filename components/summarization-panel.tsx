@@ -57,21 +57,24 @@ export function SummarizationPanel({ text, fileName }: SummarizationPanelProps) 
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <CardHeader className="items-center text-center">
+          <CardTitle className="flex items-center gap-2 justify-center">
             <Sparkles className="h-5 w-5" />
             AI-Powered Summarization
           </CardTitle>
-          <CardDescription>Generate concise study notes and key takeaways from your uploaded material.</CardDescription>
+          <CardDescription className="text-center">Generate concise study notes and key takeaways from your uploaded material.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2 mb-4">
-            <FileText className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">{fileName}</span>
+          <div className="flex flex-col items-center gap-2 mb-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">{fileName}</span>
+            </div>
             <Badge variant="secondary">Ready for analysis</Badge>
           </div>
 
           {!summary && (
+            <div className="flex justify-center">
             <Button onClick={generateSummary} disabled={isGenerating} className="w-48 bg-sky-500 text-white hover:bg-sky-600">
               {isGenerating ? (
                 <>
@@ -85,6 +88,7 @@ export function SummarizationPanel({ text, fileName }: SummarizationPanelProps) 
                 </>
               )}
             </Button>
+            </div>
           )}
         </CardContent>
       </Card>
