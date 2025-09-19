@@ -9,6 +9,7 @@ import { FileUpload } from "@/components/file-upload"
 import { SummarizationPanel } from "@/components/summarization-panel"
 import { ChatbotPanel } from "@/components/chatbot-panel"
 import { QuizPanel } from "@/components/quiz-panel"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function HomePage() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
@@ -31,9 +32,12 @@ export default function HomePage() {
               <Brain className="h-8 w-8 text-primary" />
               <h1 className="text-2xl font-bold text-balance">AI Study Assistant</h1>
             </div>
-            <p className="text-sm text-muted-foreground hidden md:block">
-              Upload, Summarize, Chat, and Quiz with your study materials
-            </p>
+            <div className="flex items-center gap-4">
+              <p className="text-sm text-muted-foreground hidden md:block">
+                Upload, Summarize, Chat, and Quiz with your study materials
+              </p>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>

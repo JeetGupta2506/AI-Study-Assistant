@@ -4,23 +4,22 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color palette to match educational app design brief */
   --background: oklch(1 0 0); /* White background */
   --foreground: oklch(0.145 0 0); /* Dark gray text */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0); /* Red primary color */
+  --primary: oklch(0.205 0 0); /* Dark primary color */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0); /* Amber secondary */
+  --secondary: oklch(0.97 0 0); /* Light secondary */
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0); /* Amber accent */
+  --accent: oklch(0.97 0 0); /* Light accent */
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -76,7 +75,8 @@
 }
 
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -121,5 +121,5 @@
   }
   body {
     @apply bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
-}
