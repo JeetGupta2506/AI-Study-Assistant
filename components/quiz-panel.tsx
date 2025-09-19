@@ -31,67 +31,28 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: number }>({})
   const [showResults, setShowResults] = useState(false)
   const [quizCompleted, setQuizCompleted] = useState(false)
-
-  const sampleQuiz: Question[] = [
-    {
-      id: "1",
-      question: "What is the basic unit of life according to cell theory?",
-      options: ["Atom", "Molecule", "Cell", "Tissue"],
-      correctAnswer: 2,
-      explanation:
-        "According to cell theory, the cell is the basic unit of life. All living organisms are composed of one or more cells.",
-    },
-    {
-      id: "2",
-      question: "Which process do plants use to convert sunlight into energy?",
-      options: ["Cellular respiration", "Photosynthesis", "Fermentation", "Glycolysis"],
-      correctAnswer: 1,
-      explanation:
-        "Photosynthesis is the process by which plants convert light energy, carbon dioxide, and water into glucose and oxygen.",
-    },
-    {
-      id: "3",
-      question: "What is the powerhouse of the cell?",
-      options: ["Nucleus", "Ribosome", "Mitochondria", "Endoplasmic reticulum"],
-      correctAnswer: 2,
-      explanation:
-        "Mitochondria are called the powerhouse of the cell because they produce ATP, the energy currency of the cell.",
-    },
-    {
-      id: "4",
-      question: "Which type of cells have a membrane-bound nucleus?",
-      options: ["Prokaryotic cells", "Eukaryotic cells", "Both types", "Neither type"],
-      correctAnswer: 1,
-      explanation:
-        "Eukaryotic cells have a membrane-bound nucleus, while prokaryotic cells have their genetic material freely floating in the cytoplasm.",
-    },
-    {
-      id: "5",
-      question: "What is homeostasis?",
-      options: [
-        "The process of cell division",
-        "The maintenance of stable internal conditions",
-        "The breakdown of glucose",
-        "The formation of proteins",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Homeostasis is the process by which living organisms maintain stable internal conditions despite changes in their external environment.",
-    },
-  ]
+  const [error, setError] = useState<string | null>(null)
 
   const generateQuiz = async () => {
     setIsGenerating(true)
-
-    // Simulate AI quiz generation
-    setTimeout(() => {
-      setQuiz(sampleQuiz)
-      setIsGenerating(false)
+    setError(null)
+    try {
+      const response = await api.generateQuiz(text)
+      if (!response.questions || !Array.isArray(response.questions)) {
+        throw new Error('Invalid quiz format received from server')
+      }
+      setQuiz(response.questions)
       setCurrentQuestionIndex(0)
       setSelectedAnswers({})
       setShowResults(false)
       setQuizCompleted(false)
-    }, 3000)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to generate quiz'
+      setError(message)
+      setQuiz(null)
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   const handleAnswerSelect = (questionIndex: number, answerIndex: number) => {
@@ -182,19 +143,26 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
           </div>
 
           {!quiz && (
-            <Button onClick={generateQuiz} disabled={isGenerating} className="w-full">
-              {isGenerating ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Generating Quiz...
-                </>
-              ) : (
-                <>
-                  <Brain className="h-4 w-4 mr-2" />
-                  Generate Practice Quiz
-                </>
+            <>
+              {error && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
               )}
-            </Button>
+              <Button onClick={generateQuiz} disabled={isGenerating} className="w-full">
+                {isGenerating ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Generating Questions...
+                  </>
+                ) : (
+                  <>
+                    <Brain className="h-4 w-4 mr-2" />
+                    Generate Practice Quiz
+                  </>
+                )}
+              </Button>
+            </>
           )}
         </CardContent>
       </Card>

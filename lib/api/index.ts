@@ -63,7 +63,8 @@ export const api = {
     });
     
     if (!response.ok) {
-      throw new Error('Failed to generate quiz');
+      const errorData = await response.json().catch(() => ({ detail: 'Failed to generate quiz' }));
+      throw new Error(errorData.detail || 'Failed to generate quiz');
     }
     
     return response.json();
