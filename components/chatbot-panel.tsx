@@ -10,6 +10,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { MessageCircle, Send, Bot, User, Lightbulb } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { api } from "@/lib/api"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 interface Message {
   id: string
@@ -138,7 +140,22 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
                       message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
                     }`}
                   >
-                    <div className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</div>
+                    <div className="text-sm leading-relaxed">
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                          ul: ({node, ...props}) => <ul className="list-disc ml-4 mb-2" {...props} />,
+                          ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-2" {...props} />,
+                          li: ({node, ...props}) => <li className="mb-1" {...props} />,
+                          strong: ({node, ...props}) => <strong className="font-semibold" {...props} />,
+                          em: ({node, ...props}) => <em className="italic" {...props} />,
+                          code: ({node, ...props}) => <code className="bg-muted rounded px-1" {...props} />
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
                     <div className="text-xs opacity-70 mt-1">
                       {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </div>

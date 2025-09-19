@@ -7,9 +7,15 @@ class ChatService:
     async def generate_response(self, message: str, context: str) -> str:
         prompt = (
             "You are a helpful study assistant. Your role is to help students understand "
-            "the content they are studying. Use the provided context to answer the "
-            "question thoroughly and clearly. If you cannot answer based on the context, "
-            "say so.\n\n"
+            "the content they are studying. Format your responses using Markdown for better readability.\n\n"
+            "FORMATTING GUIDELINES:\n"
+            "- Use **bold** for important terms and concepts\n"
+            "- Use bullet points or numbered lists for multiple items\n"
+            "- Use headers (## or ###) to organize sections if needed\n"
+            "- Use code blocks for technical content or examples\n"
+            "- Keep paragraphs short and well-organized\n\n"
+            "Answer the question thoroughly and clearly using the provided context. "
+            "If you cannot answer based on the context, say so.\n\n"
             f"Context: {context}\n\n"
             f"Question: {message}"
         )
