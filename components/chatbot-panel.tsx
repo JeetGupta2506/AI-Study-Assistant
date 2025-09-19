@@ -203,7 +203,7 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
               disabled={isTyping}
               className="flex-1"
             />
-            <Button onClick={handleSendMessage} disabled={!inputValue.trim() || isTyping} size="icon">
+            <Button onClick={handleSendMessage} disabled={!inputValue.trim() || isTyping} size="icon" className="bg-sky-500 text-white hover:bg-sky-600">
               <Send className="h-4 w-4" />
             </Button>
           </div>
