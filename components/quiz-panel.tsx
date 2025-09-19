@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { BookOpen, Brain, CheckCircle, XCircle, RotateCcw, Download } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { api } from "@/lib/api"
@@ -32,12 +33,13 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
   const [showResults, setShowResults] = useState(false)
   const [quizCompleted, setQuizCompleted] = useState(false)
   const [error, setError] = useState<string | null>(null)
+    const [numQuestions, setNumQuestions] = useState(5)
 
   const generateQuiz = async () => {
     setIsGenerating(true)
     setError(null)
     try {
-      const response = await api.generateQuiz(text)
+      const response = await api.generateQuiz(text, numQuestions)
       if (!response.questions || !Array.isArray(response.questions)) {
         throw new Error('Invalid quiz format received from server')
       }
@@ -159,6 +161,19 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
+              <div className="mb-4 flex items-center gap-2">
+                <Label htmlFor="num-questions" className="font-medium">Number of Questions:</Label>
+                <Select value={numQuestions.toString()} onValueChange={(value) => setNumQuestions(Number(value))}>
+                  <SelectTrigger className="w-24">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[3, 5, 10, 15, 20].map(n => (
+                      <SelectItem key={n} value={n.toString()}>{n}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <Button onClick={generateQuiz} disabled={isGenerating} className="w-full">
                 {isGenerating ? (
                   <>
