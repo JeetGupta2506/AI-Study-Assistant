@@ -138,17 +138,17 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center gap-2 justify-center">
             <Brain className="h-5 w-5" />
             AI Quiz Generator
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-center">
             Generate practice questions and flashcards based on your study material to test your knowledge.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 justify-center">
             <BookOpen className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">{fileName}</span>
             <Badge variant="secondary">Ready for quiz generation</Badge>
@@ -161,7 +161,7 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <div className="mb-4 flex items-center gap-2">
+              <div className="mb-4 flex items-center gap-2 justify-center">
                 <Label htmlFor="num-questions" className="font-medium">Number of Questions:</Label>
                 <Select value={numQuestions.toString()} onValueChange={(value) => setNumQuestions(Number(value))}>
                   <SelectTrigger className="w-24">
@@ -174,18 +174,20 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <Button onClick={generateQuiz} disabled={isGenerating} className="w-48 bg-sky-500 text-white hover:bg-sky-600">
-                {isGenerating ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Generating Questions...
-                  </>
-                ) : (
-                  <>
-                    Generate Practice Quiz
-                  </>
-                )}
-              </Button>
+              <div className="text-center">
+                <Button onClick={generateQuiz} disabled={isGenerating} className="w-48 bg-sky-500 text-white hover:bg-sky-600">
+                  {isGenerating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Generating Questions...
+                    </>
+                  ) : (
+                    <>
+                      Generate Practice Quiz
+                    </>
+                  )}
+                </Button>
+              </div>
             </>
           )}
         </CardContent>
@@ -212,7 +214,7 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
           <CardContent className="space-y-6">
             {currentQuestion && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold leading-relaxed">{currentQuestion.question}</h3>
+                <h3 className="text-lg font-semibold leading-relaxed text-center">{currentQuestion.question}</h3>
 
                 <RadioGroup
                   key={`question-${currentQuestionIndex}`} // Force re-render on question change
