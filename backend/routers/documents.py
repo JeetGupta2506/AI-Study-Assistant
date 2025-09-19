@@ -28,3 +28,4 @@ async def summarize_text(request: SummarizeRequest):
             status_code=500, 
             detail="An unexpected error occurred while generating the summary. Please try again later."
         )
+

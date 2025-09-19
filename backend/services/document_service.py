@@ -101,3 +101,4 @@ class DocumentService:
                 status_code=500,
                 detail="Failed to generate summary. Please try again with a different text or contact support."
             )
+
