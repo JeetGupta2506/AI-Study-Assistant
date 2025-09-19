@@ -29,8 +29,8 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Brain className="h-8 w-8 text-primary" />
-              <h1 className="text-2xl font-bold text-balance">AI Study Assistant</h1>
+              <Brain className="h-8 w-8 logo" />
+              <h1 className="text-2xl font-bold text-balance logo">AI Study Assistant</h1>
             </div>
             <div className="flex items-center gap-4">
               <p className="text-sm text-muted-foreground hidden md:block">
