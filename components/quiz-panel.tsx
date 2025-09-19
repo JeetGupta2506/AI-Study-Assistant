@@ -159,7 +159,7 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <Button onClick={generateQuiz} disabled={isGenerating} className="w-full">
+              <Button onClick={generateQuiz} disabled={isGenerating} className="w-48 bg-sky-500 text-white hover:bg-sky-600">
                 {isGenerating ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -167,7 +167,6 @@ export function QuizPanel({ text, fileName }: QuizPanelProps) {
                   </>
                 ) : (
                   <>
-                    <Brain className="h-4 w-4 mr-2" />
                     Generate Practice Quiz
                   </>
                 )}

@@ -72,7 +72,7 @@ export function SummarizationPanel({ text, fileName }: SummarizationPanelProps) 
           </div>
 
           {!summary && (
-            <Button onClick={generateSummary} disabled={isGenerating} className="w-full">
+            <Button onClick={generateSummary} disabled={isGenerating} className="w-48 bg-sky-500 text-white hover:bg-sky-600">
               {isGenerating ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
