@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { BookOpen, Brain, CheckCircle, XCircle, RotateCcw, Download } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { api } from "@/lib/api"
 
 interface Question {
   id: string

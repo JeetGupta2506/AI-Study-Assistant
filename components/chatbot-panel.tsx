@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { MessageCircle, Send, Bot, User, Lightbulb } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { api } from "@/lib/api"
 
 interface Message {
   id: string
@@ -89,17 +90,27 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
     setInputValue("")
     setIsTyping(true)
 
-    // Simulate AI processing time
-    setTimeout(() => {
+    try {
+      const response = await api.sendChatMessage(inputValue, text)
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: simulateAIResponse(inputValue),
+        content: response.content,
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, aiResponse])
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "I apologize, but I encountered an error while processing your request. Please try again.",
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+      console.error('Error in chat:', error)
+    } finally {
       setIsTyping(false)
-    }, 1500)
+    }
   }
 
   const handleSuggestedQuestion = (question: string) => {

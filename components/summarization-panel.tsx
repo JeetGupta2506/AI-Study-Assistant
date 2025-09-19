@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FileText, Download, Sparkles, List, Key } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { api } from "@/lib/api"
 
 interface SummarizationPanelProps {
   text: string
@@ -15,36 +16,25 @@ interface SummarizationPanelProps {
 export function SummarizationPanel({ text, fileName }: SummarizationPanelProps) {
   const [isGenerating, setIsGenerating] = useState(false)
   const [summary, setSummary] = useState<{
-    quickNotes: string[]
-    keyTakeaways: string[]
+    quick_notes: string[]
+    key_takeaways: string[]
   } | null>(null)
+
+  const [error, setError] = useState<string | null>(null)
 
   const generateSummary = async () => {
     setIsGenerating(true)
-
-    // Simulate AI summarization
-    setTimeout(() => {
-      setSummary({
-        quickNotes: [
-          "Biology is the scientific study of life and living organisms",
-          "Cell theory states all living things are made of cells",
-          "Evolution explains how species change over time through natural selection",
-          "Homeostasis is the maintenance of internal balance in organisms",
-          "Metabolism encompasses chemical processes that sustain life",
-          "Prokaryotic cells include bacteria, while eukaryotic cells include plants and animals",
-          "Key organelles include nucleus, mitochondria, ribosomes, and endoplasmic reticulum",
-        ],
-        keyTakeaways: [
-          "Cell Theory: All living organisms are composed of one or more cells, cells are the basic unit of life, and all cells arise from pre-existing cells",
-          "Evolution by Natural Selection: Organisms with favorable traits are more likely to survive and reproduce, passing these traits to offspring",
-          "Homeostasis: Living systems maintain stable internal conditions despite external changes through feedback mechanisms",
-          "Cellular Respiration: Process by which cells break down glucose to produce ATP energy for cellular functions",
-          "Photosynthesis: Plants convert sunlight, CO₂, and water into glucose and oxygen, forming the base of most food chains",
-          "DNA Structure: Double helix containing genetic information that determines organism characteristics and is passed to offspring",
-        ],
-      })
+    setError(null)
+    try {
+      const summary = await api.generateSummary(text)
+      setSummary(summary)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to generate summary'
+      setError(message)
+      console.error('Failed to generate summary:', error)
+    } finally {
       setIsGenerating(false)
-    }, 3000)
+    }
   }
 
   const downloadSummary = () => {
@@ -52,8 +42,8 @@ export function SummarizationPanel({ text, fileName }: SummarizationPanelProps) 
 
     const content =
       `Study Summary - ${fileName}\n\n` +
-      `QUICK NOTES:\n${summary.quickNotes.map((note, i) => `${i + 1}. ${note}`).join("\n")}\n\n` +
-      `KEY TAKEAWAYS:\n${summary.keyTakeaways.map((takeaway, i) => `${i + 1}. ${takeaway}`).join("\n\n")}`
+      `QUICK NOTES:\n${summary.quick_notes.map((note: string, i: number) => `${i + 1}. ${note}`).join("\n")}\n\n` +
+      `KEY TAKEAWAYS:\n${summary.key_takeaways.map((takeaway: string, i: number) => `${i + 1}. ${takeaway}`).join("\n\n")}`
 
     const blob = new Blob([content], { type: "text/plain" })
     const url = URL.createObjectURL(blob)
@@ -129,7 +119,7 @@ export function SummarizationPanel({ text, fileName }: SummarizationPanelProps) 
                     Quick Notes (1-2 line summaries)
                   </h3>
                   <ul className="space-y-2">
-                    {summary.quickNotes.map((note, index) => (
+                    {summary.quick_notes.map((note: string, index: number) => (
                       <li key={index} className="flex items-start gap-2">
                         <span className="flex-shrink-0 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-medium">
                           {index + 1}
@@ -147,7 +137,7 @@ export function SummarizationPanel({ text, fileName }: SummarizationPanelProps) 
                     Key Takeaways (Detailed bullet points)
                   </h3>
                   <div className="space-y-4">
-                    {summary.keyTakeaways.map((takeaway, index) => (
+                    {summary.key_takeaways.map((takeaway: string, index: number) => (
                       <div key={index} className="border-l-2 border-primary/20 pl-4">
                         <div className="flex items-start gap-2">
                           <span className="flex-shrink-0 w-6 h-6 bg-accent/10 text-accent-foreground rounded-full flex items-center justify-center text-xs font-medium">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Upload, FileText, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { api } from "@/lib/api"
 
 interface FileUploadProps {
   onFileUpload: (file: File, extractedText: string) => void
@@ -16,35 +17,12 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
   const [error, setError] = useState<string | null>(null)
 
   const extractTextFromPDF = async (file: File): Promise<string> => {
-    // Simulate PDF text extraction
-    // In a real implementation, you would use a library like pdf-parse or send to a backend
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(`Sample extracted text from ${file.name}:
-
-Chapter 1: Introduction to Biology
-Biology is the scientific study of life and living organisms. It encompasses various fields including molecular biology, genetics, ecology, and evolution.
-
-Key Concepts:
-- Cell theory: All living things are made of cells
-- Evolution: Species change over time through natural selection
-- Homeostasis: Living organisms maintain internal balance
-- Metabolism: Chemical processes that sustain life
-
-Chapter 2: Cell Structure
-Cells are the basic units of life. There are two main types:
-1. Prokaryotic cells (bacteria)
-2. Eukaryotic cells (plants, animals, fungi)
-
-Important organelles include:
-- Nucleus: Contains genetic material
-- Mitochondria: Powerhouse of the cell
-- Ribosomes: Protein synthesis
-- Endoplasmic reticulum: Transport system
-
-This is a simplified example of extracted text that would be used for summarization, chatbot responses, and quiz generation.`)
-      }, 2000)
-    })
+    try {
+      const response = await api.uploadDocument(file)
+      return response.text
+    } catch (err) {
+      throw new Error('Failed to extract text from document')
+    }
   }
 
   const onDrop = useCallback(
