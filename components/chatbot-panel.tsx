@@ -41,14 +41,11 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
   const [useStreaming, setUseStreaming] = useState(true)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-
   useEffect(() => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
     }
   }, [messages])
-
-  
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return
@@ -124,7 +121,6 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
     }
   }
 
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -134,7 +130,7 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="border-0 shadow-none">
         <CardHeader className="text-center">
           <CardTitle className="flex items-center gap-2 justify-center">
             <MessageCircle className="h-5 w-5" />
@@ -167,14 +163,10 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
         </CardContent>
       </Card>
 
-      <Card className="h-[600px] flex flex-col">
-        <CardHeader className="pb-3">
-          {/* Removed the "Chat with your document" title */}
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col gap-4">
-          {/* Messages */}
-          <ScrollArea className="flex-1 pr-4" ref={scrollAreaRef}>
+      <div className="h-[600px] flex flex-col bg-background rounded-lg">
+        <div className="flex-1 flex flex-col p-0">
+          {/* Messages with scrollable area */}
+          <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
             <div className="space-y-4">
               {messages.map((message) => (
                 <div
@@ -244,23 +236,24 @@ export function ChatbotPanel({ text, fileName }: ChatbotPanelProps) {
             </div>
           </ScrollArea>
 
-
-          {/* Input */}
-          <div className="flex gap-2">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ask a question about your study material..."
-              disabled={isTyping}
-              className="flex-1"
-            />
-            <Button onClick={handleSendMessage} disabled={!inputValue.trim() || isTyping} size="icon" className="bg-sky-500 text-white hover:bg-sky-600">
-              <Send className="h-4 w-4" />
-            </Button>
+          {/* Input - Fixed to bottom */}
+          <div className="sticky bottom-0 bg-background border-t p-4">
+            <div className="flex gap-2 w-full">
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Ask a question about your study material..."
+                disabled={isTyping}
+                className="flex-1"
+              />
+              <Button onClick={handleSendMessage} disabled={!inputValue.trim() || isTyping} size="icon" className="bg-sky-500 text-white hover:bg-sky-600">
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
