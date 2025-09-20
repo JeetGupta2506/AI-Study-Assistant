@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: ai-study-assistant-api
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MODEL_NAME
+        value: gemini-pro
+      - key: PORT
+        fromService:
+          type: web
+          name: ai-study-assistant-api
+          property: port
