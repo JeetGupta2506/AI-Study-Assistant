@@ -30,7 +30,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Brain className="h-8 w-8 logo" />
-              <h1 className="text-2xl font-bold text-balance logo">AI Study Assistant</h1>
+              <h1 className="text-2xl font-bold text-balance logo"> Study Mate</h1>
             </div>
             <div className="flex items-center gap-4">
               {/* header controls removed */}
